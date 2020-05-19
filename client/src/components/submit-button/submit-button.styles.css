@@ -1,0 +1,10 @@
+.submit-button {
+  float: right;
+  font-size: medium;
+  background-color: lightsteelblue;
+  border-radius: 10px;
+}
+.submit-button:hover {
+  background-color: lightskyblue;
+  cursor: pointer;
+}
