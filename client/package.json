@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "codemirror": "^5.53.2",
     "cra-template": "1.0.3",
     "react": "^16.13.1",
+    "react-codemirror": "^1.0.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
   },
