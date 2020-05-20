@@ -7,6 +7,12 @@
   width: 100%;
 }
 
+.custom-suggestions {
+  cursor: pointer;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 /* PADDING */
 
 .CodeMirror-lines {

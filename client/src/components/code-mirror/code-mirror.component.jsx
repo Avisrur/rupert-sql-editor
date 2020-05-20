@@ -1,31 +1,26 @@
 import React, { useState } from "react";
 import CodeMirror from "react-codemirror";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 // import axios from "axios";
+
+import { selectQueryString } from "../../redux/query/query.selectors";
+import { setQuery } from "../../redux/query/query.actions";
 import "codemirror/mode/sql/sql";
 import "codemirror/theme/dracula.css";
 
 import "./code-mirror.styles.css";
 
-const CodeMirrorComponent = () => {
-  const [code, setCode] = useState("Type query here...");
-  const handleTab = () => {
+const CodeMirrorComponent = ({ queryString, setQuery }) => {
+  const handleTab = (e, a, d) => {
+    console.log(e);
+    console.log(a);
+    console.log(d);
     console.log("WORKSSSS");
   };
 
   const onChange = (newValue) => {
-    // if (newValue.toLowerCase().includes("from ") && !this.state.fromSelected) {
-    //   this.setState({ ...this.state, fromSelected: true });
-    //   axios
-    //     .post(`http://localhost:5000/suggestion/tablesName`, { newValue })
-    //     .then((res) => {
-    //       console.log(res.data);
-    //     });
-    // }
-
-    // if (!newValue.toLowerCase().includes("from ") && this.state.fromSelected) {
-    //   this.setState({ ...this.state, fromSelected: false });
-    // }
-    console.log(newValue);
+    setQuery(newValue);
   };
 
   const options = {
@@ -38,7 +33,7 @@ const CodeMirrorComponent = () => {
 
   return (
     <CodeMirror
-      value={code}
+      value={queryString}
       onChange={onChange}
       options={options}
       autoFocus={true}
@@ -46,4 +41,15 @@ const CodeMirrorComponent = () => {
   );
 };
 
-export default CodeMirrorComponent;
+const mapStateToProps = createStructuredSelector({
+  queryString: selectQueryString,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setQuery: (queryString) => dispatch(setQuery(queryString)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CodeMirrorComponent);
