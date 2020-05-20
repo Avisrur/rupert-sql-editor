@@ -4,6 +4,7 @@ const talbeNamesDB = require("../db/table-names");
 const columnNamesDB = require("../db/column-names");
 
 router.post("/tableNames", tableNames);
+router.post("/tableNamesStartsWith", tableNamesStartsWith);
 router.post("/columnNames", columnNames);
 
 module.exports = router;
@@ -11,6 +12,14 @@ module.exports = router;
 async function tableNames(req, res, next) {
   console.log(req.body);
   const { rows } = await talbeNamesDB.getAllTableNames();
+  res.json(rows);
+}
+
+async function tableNamesStartsWith(req, res, next) {
+  console.log(req.body.startsWith);
+  const { rows } = await talbeNamesDB.getAllTableNamesThatStartsWith(
+    req.body.startsWith + "%"
+  );
   res.json(rows);
 }
 

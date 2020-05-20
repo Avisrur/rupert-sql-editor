@@ -1,0 +1,23 @@
+.suggestion-container {
+  width: 30%;
+  background-color: #282a36;
+}
+
+.suggestion-header {
+  color: white;
+  text-align: center;
+}
+
+.list-group-item {
+  color: white;
+  background-color: lightslategray;
+}
+
+.list-group-item:hover {
+  background-color: lightseagreen;
+  cursor: pointer;
+}
+
+.no-suggestions {
+  color: white;
+}

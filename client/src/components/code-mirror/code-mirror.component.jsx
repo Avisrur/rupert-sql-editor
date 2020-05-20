@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CodeMirror from "react-codemirror";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -13,9 +13,6 @@ import "./code-mirror.styles.css";
 
 const CodeMirrorComponent = ({ queryString, setQuery }) => {
   const handleTab = (e, a, d) => {
-    console.log(e);
-    console.log(a);
-    console.log(d);
     console.log("WORKSSSS");
   };
 
@@ -33,6 +30,7 @@ const CodeMirrorComponent = ({ queryString, setQuery }) => {
 
   return (
     <CodeMirror
+      className="editor"
       value={queryString}
       onChange={onChange}
       options={options}

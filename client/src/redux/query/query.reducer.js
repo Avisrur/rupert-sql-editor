@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   queryObject: {
     select: "",
     from: "",
+    join: "",
     where: "",
     groupBy: "",
   },
