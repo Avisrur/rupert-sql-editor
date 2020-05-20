@@ -1,17 +1,26 @@
 const express = require("express");
 const router = express.Router();
+const talbeNamesDB = require("../db/table-names");
+const columnNamesDB = require("../db/column-names");
 
-router.post("/tablesName", tablesName);
-router.post("/columnsName", columnsName);
+router.post("/tableNames", tableNames);
+router.post("/columnNames", columnNames);
 
 module.exports = router;
 
-function tablesName(req, res, next) {
+async function tableNames(req, res, next) {
   console.log(req.body);
-  res.json(["corona", "countries"]);
+  const { rows } = await talbeNamesDB.getAllTableNames();
+  res.json(rows);
 }
 
-function columnsName(req, res, next) {
-  console.log(req.body);
-  res.json(["country_id", "countries"]);
+async function columnNames(req, res, next) {
+  console.log(req.body.table_name);
+  const { rows } = await talbeNamesDB.getTableIdByName(req.body.table_name);
+  console.log(rows[0].id);
+  const { rows: column_rows } = await columnNamesDB.getAllColumnNamesByTableId(
+    rows[0].id
+  );
+  console.log(column_rows);
+  res.json(column_rows);
 }
