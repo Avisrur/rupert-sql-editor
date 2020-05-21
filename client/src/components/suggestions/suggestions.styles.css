@@ -21,3 +21,7 @@
 .no-suggestions {
   color: white;
 }
+
+.used-span {
+  float: right;
+}

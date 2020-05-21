@@ -5,6 +5,7 @@ const INITIAL_STATE = {
     select: "",
     from: "",
     join: "",
+    on: "",
     where: "",
     groupBy: "",
   },

@@ -2,61 +2,31 @@ export const handleQueryString = (queryString) => {
   queryString = queryString.toLowerCase();
   const splitedQuery = queryString.split(/\n| /);
   let queryObject = {
-    select: updateSelectValue(splitedQuery),
-    from: updateFromValue(splitedQuery),
-    where: updateWhereValue(splitedQuery),
+    select: updateValue(splitedQuery, "select", "from"),
+    from: updateValue(splitedQuery, "from", "join"),
+    join: updateValue(splitedQuery, "join", "on"),
+    on: updateValue(splitedQuery, "on", "where"),
+    where: updateValue(splitedQuery, "where", "group"),
     groupBy: updateGroupByValue(splitedQuery),
   };
   console.log(queryObject);
   return queryObject;
 };
 
-const updateSelectValue = (splitedQuery) => {
+const updateValue = (splitedQuery, fromString, toString) => {
   let selectValue = "";
-  if (splitedQuery.includes("select")) {
-    if (splitedQuery.includes("from")) {
+  if (splitedQuery.includes(fromString)) {
+    if (splitedQuery.includes(toString)) {
       selectValue = splitedQuery.slice(
-        splitedQuery.indexOf("select") + 1,
-        splitedQuery.indexOf("from")
+        splitedQuery.indexOf(fromString) + 1,
+        splitedQuery.indexOf(toString)
       );
     } else {
-      selectValue = splitedQuery.slice(splitedQuery.indexOf("select") + 1);
+      selectValue = splitedQuery.slice(splitedQuery.indexOf(fromString) + 1);
     }
     selectValue = selectValue.join(" ");
   }
   return selectValue;
-};
-
-const updateFromValue = (splitedQuery) => {
-  let fromValue = "";
-  if (splitedQuery.includes("from")) {
-    if (splitedQuery.includes("where")) {
-      fromValue = splitedQuery.slice(
-        splitedQuery.indexOf("from") + 1,
-        splitedQuery.indexOf("where")
-      );
-    } else {
-      fromValue = splitedQuery.slice(splitedQuery.indexOf("from") + 1);
-    }
-    fromValue = fromValue.join(" ");
-  }
-  return fromValue;
-};
-
-const updateWhereValue = (splitedQuery) => {
-  let whereValue = "";
-  if (splitedQuery.includes("where")) {
-    if (splitedQuery.includes("group")) {
-      whereValue = splitedQuery.slice(
-        splitedQuery.indexOf("where") + 1,
-        splitedQuery.indexOf("group")
-      );
-    } else {
-      whereValue = splitedQuery.slice(splitedQuery.indexOf("where") + 1);
-    }
-    whereValue = whereValue.join(" ");
-  }
-  return whereValue;
 };
 
 const updateGroupByValue = (splitedQuery) => {
