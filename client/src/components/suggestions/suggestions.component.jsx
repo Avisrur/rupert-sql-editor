@@ -7,12 +7,15 @@ import {
 } from "./suggestions.utils";
 import axios from "axios";
 
-import { selectQueryObject } from "../../redux/query/query.selectors";
-import { setQuery } from "../../redux/query/query.actions";
+import {
+  selectQueryObject,
+  selectQueryString,
+} from "../../redux/query/query.selectors";
+import { setQueryUsingSuggestion } from "../../redux/query/query.actions";
 
 import "./suggestions.styles.css";
 
-const Suggestions = ({ queryObject }) => {
+const Suggestions = ({ queryObject, setQueryUsingSuggestion }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [lastQueryObject, setLastQueryObject] = useState(queryObject);
   const [lastSqlClause, setLastSqlClause] = useState("");
@@ -20,7 +23,6 @@ const Suggestions = ({ queryObject }) => {
 
   useEffect(() => {
     curSqlClause = checkWhichSqlClauseHasChanged(lastQueryObject, queryObject);
-    console.log(curSqlClause);
     if (curSqlClause !== undefined && curSqlClause !== "") {
       if (
         queryObject[curSqlClause][queryObject[curSqlClause].length - 1] === "."
@@ -44,7 +46,6 @@ const Suggestions = ({ queryObject }) => {
             startsWith: queryObject[curSqlClause],
           })
           .then((response) => {
-            console.log("RESPONSE", response.data);
             const sortedSuggestions = sortByPriority(
               response.data,
               curSqlClause
@@ -58,16 +59,10 @@ const Suggestions = ({ queryObject }) => {
     setSuggestions([]);
   }, [queryObject]);
 
-  const handleSuggestionSelection = (a, b, c) => {
-    console.log(a);
-    console.log(b);
-    console.log(c);
-  };
-
   return (
     <div className="suggestion-container">
       <h2 className="suggestion-header">
-        Suggestion List{" "}
+        Suggestion List
         {lastSqlClause !== "" ? `For ${lastSqlClause.toUpperCase()}` : ""}
       </h2>
       <ul className="list-group">
@@ -79,7 +74,7 @@ const Suggestions = ({ queryObject }) => {
               key={suggestion.id}
               className="list-group-item list-group-item-info"
               onClick={() => {
-                console.log(suggestion);
+                setQueryUsingSuggestion(suggestion, queryObject, lastSqlClause);
               }}
             >
               {suggestion.name}
@@ -100,7 +95,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setQuery: (queryString) => dispatch(setQuery(queryString)),
+  setQueryUsingSuggestion: (suggestion, queryObject, lastSqlClause) =>
+    dispatch(setQueryUsingSuggestion(suggestion, queryObject, lastSqlClause)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Suggestions);

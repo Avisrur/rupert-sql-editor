@@ -3,7 +3,7 @@ export const handleQueryString = (queryString) => {
   const splitedQuery = queryString.split(/\n| /);
   let queryObject = {
     select: updateValue(splitedQuery, "select", "from"),
-    from: updateValue(splitedQuery, "from", "join"),
+    from: updateValue(splitedQuery, "from", "join", "where"),
     join: updateValue(splitedQuery, "join", "on"),
     on: updateValue(splitedQuery, "on", "where"),
     where: updateValue(splitedQuery, "where", "group"),
@@ -13,10 +13,20 @@ export const handleQueryString = (queryString) => {
   return queryObject;
 };
 
-const updateValue = (splitedQuery, fromString, toString) => {
+const updateValue = (
+  splitedQuery,
+  fromString,
+  toString,
+  toSecondString = ""
+) => {
   let selectValue = "";
   if (splitedQuery.includes(fromString)) {
     if (splitedQuery.includes(toString)) {
+      selectValue = splitedQuery.slice(
+        splitedQuery.indexOf(fromString) + 1,
+        splitedQuery.indexOf(toString)
+      );
+    } else if (splitedQuery.includes(toSecondString)) {
       selectValue = splitedQuery.slice(
         splitedQuery.indexOf(fromString) + 1,
         splitedQuery.indexOf(toString)
@@ -36,4 +46,18 @@ const updateGroupByValue = (splitedQuery) => {
     groupByValue = groupByValue.join(" ");
   }
   return groupByValue;
+};
+
+export const placeSuggestionInQueryObjectAndCreateQueryString = (
+  suggestion,
+  queryObject,
+  sqlClause
+) => {
+  console.log("QUERRRTYYYYY", queryObject);
+  queryObject[sqlClause] = suggestion.name;
+  let queryString = "";
+  for (let [key, value] of Object.entries(queryObject)) {
+    if (value !== "") queryString += key + " " + value + "\n";
+  }
+  return queryString;
 };

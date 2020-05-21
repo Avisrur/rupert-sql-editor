@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CodeMirror from "react-codemirror";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -12,7 +12,12 @@ import "codemirror/theme/dracula.css";
 import "./code-mirror.styles.css";
 
 const CodeMirrorComponent = ({ queryString, setQuery }) => {
-  const handleTab = (e, a, d) => {
+  const [codeMirrorString, setCodeMirrorString] = useState(queryString);
+  useEffect(() => {
+    setCodeMirrorString(queryString);
+  }, [queryString]);
+
+  const handleTab = () => {
     console.log("WORKSSSS");
   };
 
@@ -31,7 +36,7 @@ const CodeMirrorComponent = ({ queryString, setQuery }) => {
   return (
     <CodeMirror
       className="editor"
-      value={queryString}
+      value={codeMirrorString}
       onChange={onChange}
       options={options}
       autoFocus={true}
