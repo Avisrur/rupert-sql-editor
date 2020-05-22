@@ -32,10 +32,12 @@ const handleTableName = async (tableName, sqlOp) => {
     const { rows: newRows } = await talbeNamesDB.getTableIdByName(tableName);
     await commonOpsDB.createCommonOpsById(newRows[0].id, sqlOp + "_op");
   } else {
+    //UPDATE - NEED TO CONTINUE!
     const { rows: opsRows } = await commonOpsDB.getCommonOpsById(rows[0].id);
     console.log("OPS ROWS BEFORE CHANGE", opsRows);
     opsRows[0][sqlOp + "_op"] += 1;
     console.log("OPS ROWS AFTER CHANGE", opsRows);
+    let max = Object.entries(obj).sort((prev, next) => next - prev)[0]; // WORK IN PROGRESS
   }
 };
 
