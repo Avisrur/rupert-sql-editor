@@ -2,7 +2,6 @@ import React from "react";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-// import axios from "axios";
 
 import { selectQueryString } from "../../redux/query/query.selectors";
 import { setQuery } from "../../redux/query/query.actions";
