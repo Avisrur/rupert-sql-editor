@@ -1,5 +1,5 @@
 import React from "react";
-import CodeMirror from "react-codemirror";
+import { UnControlled as CodeMirror } from "react-codemirror2";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 // import axios from "axios";
@@ -12,11 +12,11 @@ import "codemirror/theme/dracula.css";
 import "./code-mirror.styles.css";
 
 const CodeMirrorComponent = ({ queryString, setQuery }) => {
-  const handleTab = (e, a, d) => {
+  const handleTab = () => {
     console.log("WORKSSSS");
   };
 
-  const onChange = (newValue) => {
+  const onChange = (e, a, newValue) => {
     setQuery(newValue);
   };
 
@@ -30,6 +30,7 @@ const CodeMirrorComponent = ({ queryString, setQuery }) => {
 
   return (
     <CodeMirror
+      autoCursor={false}
       className="editor"
       value={queryString}
       onChange={onChange}

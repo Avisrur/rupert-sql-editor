@@ -19,8 +19,6 @@ export const sortByPriority = (response, sqlClause) => {
     var index = response.indexOf(element);
     response.splice(index, 1);
   });
-  console.log(sortedBySqlClause);
-  console.log(response);
   sortedBySqlClause.sort((a, b) => b.used - a.used);
   response.sort((a, b) => b.used - a.used);
   return sortedBySqlClause.concat(response);
