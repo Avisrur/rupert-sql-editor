@@ -11,7 +11,7 @@ module.exports = router;
 
 async function submitQuery(req, res, next) {
   console.log(req.body.data);
-  let { query, interactions } = req.body.data;
+  let { query, interactions } = req.body.data; // WORK IN PRGORESS, NEED TO CREATE USER INTERACTIONS TABLE AND HANDLE QUERY SAVING DIFFRENTLY AND HANDLE MORE THINGS INSIDE EACH CLAUSE
   query = query.split("\n").join(" ");
   handleNewQuery(query);
   const { rows } = await pastQueriesDB.getQuery(query);
