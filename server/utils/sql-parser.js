@@ -39,7 +39,7 @@ const updateValue = (
     } else if (splitedQuery.includes(toSecondString)) {
       valueToUpdate = splitedQuery.slice(
         splitedQuery.indexOf(fromString) + 1,
-        splitedQuery.indexOf(toString)
+        splitedQuery.indexOf(toSecondString)
       );
     } else {
       valueToUpdate = splitedQuery.slice(splitedQuery.indexOf(fromString) + 1);

@@ -7,12 +7,21 @@ import {
 } from "./suggestions.utils";
 import axios from "axios";
 
-import { selectQueryObject } from "../../redux/query/query.selectors";
+import {
+  selectQueryObject,
+  selectQueryString,
+} from "../../redux/query/query.selectors";
 import { setQueryUsingSuggestion } from "../../redux/query/query.actions";
+import { addUserInteraction } from "../../redux/user-interactions/user-interactions.actions";
 
 import "./suggestions.styles.css";
 
-const Suggestions = ({ queryObject, setQueryUsingSuggestion }) => {
+const Suggestions = ({
+  queryObject,
+  queryString,
+  setQueryUsingSuggestion,
+  addUserInteraction,
+}) => {
   const [suggestions, setSuggestions] = useState([]);
   const [lastQueryObject, setLastQueryObject] = useState(queryObject);
   const [lastSqlClause, setLastSqlClause] = useState("");
@@ -68,13 +77,22 @@ const Suggestions = ({ queryObject, setQueryUsingSuggestion }) => {
               key={suggestion.id}
               className="list-group-item list-group-item-info"
               onClick={() => {
+                addUserInteraction({
+                  curSqlClause: lastSqlClause,
+                  curQueryString: queryString,
+                  suggestion: suggestion.name,
+                });
                 setQueryUsingSuggestion(suggestion, queryObject, lastSqlClause);
               }}
             >
               {suggestion.name}
               <span className="used-span"> | used: {suggestion.used}</span>
               <span className="used-span">
-                common op: {suggestion.common_op.toUpperCase()} |
+                {suggestion.common_op !== null &&
+                suggestion.common_op !== undefined
+                  ? `common op: ${suggestion.common_op.toUpperCase()}`
+                  : null}{" "}
+                |
               </span>
             </li>
           ))
@@ -86,11 +104,14 @@ const Suggestions = ({ queryObject, setQueryUsingSuggestion }) => {
 
 const mapStateToProps = createStructuredSelector({
   queryObject: selectQueryObject,
+  queryString: selectQueryString,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setQueryUsingSuggestion: (suggestion, queryObject, lastSqlClause) =>
     dispatch(setQueryUsingSuggestion(suggestion, queryObject, lastSqlClause)),
+  addUserInteraction: (userInteraction) =>
+    dispatch(addUserInteraction(userInteraction)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Suggestions);

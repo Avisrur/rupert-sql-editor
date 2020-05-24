@@ -10,19 +10,16 @@ router.delete("/deleteQueryById", deleteQueryById);
 module.exports = router;
 
 async function submitQuery(req, res, next) {
-  console.log(req.body);
-  let response;
-  handleNewQuery(req.body.query);
-  const { rows } = await pastQueriesDB.getQuery(req.body.query);
-  console.log(rows);
+  console.log(req.body.data);
+  let { query, interactions } = req.body.data;
+  query = query.split("\n").join(" ");
+  handleNewQuery(query);
+  const { rows } = await pastQueriesDB.getQuery(query);
   if (rows.length == 0) {
-    response = await pastQueriesDB.saveNewQuery(req.body.query);
+    response = await pastQueriesDB.saveNewQuery(query);
     console.log(response);
   } else {
-    response = await pastQueriesDB.updateQuery(
-      req.body.query,
-      rows[0].used + 1
-    );
+    response = await pastQueriesDB.updateQuery(query, rows[0].used + 1);
   }
   res.status(201).send("Query added");
 }

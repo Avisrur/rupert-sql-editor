@@ -5,7 +5,7 @@ export const handleQueryString = (queryString) => {
     select: updateValue(splitedQuery, "select", "from"),
     from: updateValue(splitedQuery, "from", "join", "where"),
     join: updateValue(splitedQuery, "join", "on"),
-    on: updateValue(splitedQuery, "on", "where"),
+    on: updateValue(splitedQuery, "on", "where", "group"),
     where: updateValue(splitedQuery, "where", "group"),
     groupBy: updateGroupByValue(splitedQuery),
   };
@@ -21,15 +21,9 @@ const updateValue = (
   let selectValue = "";
   if (splitedQuery.includes(fromString)) {
     if (splitedQuery.includes(toString)) {
-      selectValue = splitedQuery.slice(
-        splitedQuery.indexOf(fromString) + 1,
-        splitedQuery.indexOf(toString)
-      );
+      selectValue = getValuesBetween(splitedQuery, fromString, toString);
     } else if (splitedQuery.includes(toSecondString)) {
-      selectValue = splitedQuery.slice(
-        splitedQuery.indexOf(fromString) + 1,
-        splitedQuery.indexOf(toString)
-      );
+      selectValue = getValuesBetween(splitedQuery, fromString, toSecondString);
     } else {
       selectValue = splitedQuery.slice(splitedQuery.indexOf(fromString) + 1);
     }
@@ -61,9 +55,16 @@ export const placeSuggestionInQueryObjectAndCreateQueryString = (
   let queryString = "";
   for (let [key, value] of Object.entries(queryObject)) {
     if (value !== "") {
-      if (key != "select") queryString += "\n";
+      if (key !== "select") queryString += "\n";
       queryString += key + " " + value;
     }
   }
   return queryString;
+};
+
+const getValuesBetween = (splitedQuery, fromString, toString) => {
+  return splitedQuery.slice(
+    splitedQuery.indexOf(fromString) + 1,
+    splitedQuery.indexOf(toString)
+  );
 };
