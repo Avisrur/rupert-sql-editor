@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const checkWhichSqlClauseHasChanged = (oldObj, curObj) => {
   if (JSON.stringify(oldObj) === JSON.stringify(curObj)) return "";
   if (oldObj.select !== curObj.select) return "select";

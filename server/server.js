@@ -16,6 +16,7 @@ app.get("/", function (req, res) {
 });
 
 app.use("/query", require("./controllers/query-controller"));
+app.use("/db", require("./controllers/db-controller"));
 app.use("/suggestion", require("./controllers/suggestion-controller"));
 
 app.listen(port, (error) => {
