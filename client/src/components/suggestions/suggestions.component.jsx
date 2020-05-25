@@ -16,6 +16,10 @@ import { addUserInteraction } from "../../redux/user-interactions/user-interacti
 
 import "./suggestions.styles.css";
 
+const tableSuggestionsUrl =
+  "http://localhost:5000/suggestion/tableNamesStartsWith";
+const columnSuggestionUrl = "http://localhost:5000/suggestion/columnNames";
+
 const Suggestions = ({
   queryObject,
   queryString,
@@ -29,6 +33,9 @@ const Suggestions = ({
 
   useEffect(() => {
     curSqlClause = checkWhichSqlClauseHasChanged(lastQueryObject, queryObject);
+    if (queryString === "Type Your Query Here...") {
+      curSqlClause = "";
+    }
     if (curSqlClause !== undefined && curSqlClause !== "") {
       let sortedSuggestions;
       if (
@@ -38,7 +45,7 @@ const Suggestions = ({
         curSqlClause !== "from"
       ) {
         axios
-          .post("http://localhost:5000/suggestion/columnNames", {
+          .post(columnSuggestionUrl, {
             table_name: queryObject[curSqlClause].slice(0, -1),
           })
           .then((response) => {
@@ -48,7 +55,7 @@ const Suggestions = ({
           });
       } else {
         axios
-          .post("http://localhost:5000/suggestion/tableNamesStartsWith", {
+          .post(tableSuggestionsUrl, {
             startsWith: queryObject[curSqlClause],
           })
           .then((response) => {

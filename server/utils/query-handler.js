@@ -57,12 +57,10 @@ const handleTableName = async (tableName, sqlOp) => {
 };
 
 const handleColumnName = async (columnName, tableId, sqlOp) => {
-  console.log(columnName);
   const { rows: columnNameRows } = await columnNamesDB.getColumnByNameAndId(
     columnName,
     tableId
   );
-  console.log(columnNameRows);
   if (sqlOp !== "from" && sqlOp !== "join") {
     const { rows: opsRows } = await commonOpsDB.getCommonOpsById(
       columnNameRows[0].id

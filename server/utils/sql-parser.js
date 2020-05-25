@@ -81,9 +81,13 @@ const handleValueToUpdate = (fromString, valueToUpdate) => {
     case "where":
       let whereValues = valueToUpdate.split(" ").join("");
       let whereNewValues = [];
-      if (whereValues.includes(">=")) whereNewValues = whereValues.split(">=");
-      if (whereValues.includes("=")) whereNewValues = whereValues.split("=");
-      if (whereValues.includes("<=")) whereNewValues = whereValues.split("<=");
+      if (whereValues.includes(">=")) {
+        whereNewValues = whereValues.split(">=");
+      } else if (whereValues.includes("<=")) {
+        whereNewValues = whereValues.split("<=");
+      } else if (whereValues.includes("=")) {
+        whereNewValues = whereValues.split("=");
+      }
       if (whereNewValues[1].includes(".")) {
         return [...whereNewValues];
       } else {

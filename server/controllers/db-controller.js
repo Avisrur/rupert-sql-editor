@@ -11,7 +11,7 @@ router.post("/createTable", createTable);
 module.exports = router;
 
 async function createTable(req, res, next) {
-  const { rows } = await talbeNamesDB.getTableByName(req.body.tableName);
+  const { rows } = await talbeNamesDB.getTableIdByName(req.body.tableName);
   if (rows.length === 0) {
     const newTableId = uuidv4();
     await talbeNamesDB.createNewTableNameWithoutCommonOp(
