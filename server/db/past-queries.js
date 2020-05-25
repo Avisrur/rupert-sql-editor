@@ -1,9 +1,10 @@
 const pool = require("./db-pool");
-const tableName = "past_queries_test";
+const tableName = "past_queries_test11";
 
 module.exports = {
-  saveNewQuery: (query) =>
-    pool.query("INSERT INTO " + tableName + " (query,used) VALUES ($1,1)", [
+  saveNewQuery: (id, query) =>
+    pool.query("INSERT INTO " + tableName + " (id,query) VALUES ($1,$2)", [
+      id,
       query,
     ]),
   getQuery: (query) =>

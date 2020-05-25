@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const checkWhichSqlClauseHasChanged = (oldObj, curObj) => {
   if (JSON.stringify(oldObj) === JSON.stringify(curObj)) return "";
   if (oldObj.select !== curObj.select) return "select";
@@ -21,3 +23,19 @@ export const sortByPriority = (response, sqlClause) => {
   response.sort((a, b) => b.used - a.used);
   return sortedBySqlClause.concat(response);
 };
+
+export const getSuggestionsFrom = (
+  url,
+  data,
+  queryObject,
+  curSqlClause,
+  setSuggestions,
+  setLastQueryObject
+) => {
+  let sortedSuggestions;
+  axios.post(url, data).then((response) => {
+    sortedSuggestions = sortByPriority(response.data, curSqlClause);
+    setSuggestions(sortedSuggestions);
+    setLastQueryObject(queryObject);
+  });
+}; //DIDNT WORK!

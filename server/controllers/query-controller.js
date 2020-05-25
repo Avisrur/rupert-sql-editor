@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const { v4: uuidv4 } = require("uuid");
 const pastQueriesDB = require("../db/past-queries");
+const userInteractionsDB = require("../db/user-interactions");
 const { handleNewQuery } = require("../utils/query-handler");
 
 router.post("/submitQuery", submitQuery);
@@ -10,16 +12,22 @@ router.delete("/deleteQueryById", deleteQueryById);
 module.exports = router;
 
 async function submitQuery(req, res, next) {
-  console.log(req.body.data);
   let { query, interactions } = req.body.data;
   query = query.split("\n").join(" ");
   handleNewQuery(query);
-  const { rows } = await pastQueriesDB.getQuery(query);
-  if (rows.length == 0) {
-    response = await pastQueriesDB.saveNewQuery(query);
-    console.log(response);
-  } else {
-    response = await pastQueriesDB.updateQuery(query, rows[0].used + 1);
+  const newQueryID = uuidv4();
+  await pastQueriesDB.saveNewQuery(newQueryID, query);
+  for (let interaction of interactions) {
+    let { curSqlClause, curQueryString, suggestion } = interaction;
+    const newInteractionId = uuidv4();
+    curQueryString = curQueryString.split("\n").join(" ");
+    await userInteractionsDB.createNewUserInteraction(
+      newInteractionId,
+      curQueryString,
+      curSqlClause,
+      suggestion,
+      newQueryID
+    );
   }
   res.status(201).send("Query added");
 }

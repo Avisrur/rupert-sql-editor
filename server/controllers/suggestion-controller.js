@@ -23,8 +23,11 @@ async function tableNamesStartsWith(req, res, next) {
 
 async function columnNames(req, res, next) {
   const { rows } = await talbeNamesDB.getTableIdByName(req.body.table_name);
-  const { rows: column_rows } = await columnNamesDB.getAllColumnNamesByTableId(
-    rows[0].id
-  );
-  res.json(column_rows);
+  if (rows.length !== 0) {
+    const {
+      rows: column_rows,
+    } = await columnNamesDB.getAllColumnNamesByTableId(rows[0].id);
+    res.json(column_rows);
+  }
+  res.json([]);
 }
