@@ -6,12 +6,12 @@ module.exports = {
     pool.query(
       "INSERT INTO " +
         tableName +
-        " (id,name,common_op,used) VALUES ($1,$2,$3,1)",
+        " (id,name,common_op,used) VALUES ($1,$2,$3,0)",
       [table_id, table_name, sqlOp]
     ),
   createNewTableNameWithoutCommonOp: (table_id, table_name) =>
     pool.query(
-      "INSERT INTO " + tableName + " (id,name,used) VALUES ($1,$2,1)",
+      "INSERT INTO " + tableName + " (id,name,used) VALUES ($1,$2,10",
       [table_id, table_name]
     ),
   updateCommonOpById: (id, newCommonOp, used) =>

@@ -6,16 +6,20 @@ const commonOpsDB = require("../db/common-ops");
 
 const handleNewQuery = async (query) => {
   const queryObject = parseSqlStringToObject(query);
-  console.log(queryObject);
-  for (let [sqlOp, opValue] of Object.entries(queryObject)) {
+  console.log("OBJECT AFTER ", queryObject);
+  for (let [sqlOp, opValues] of Object.entries(queryObject)) {
     //break down op value by dots,commas,(),saved words like avg and etc
-    if (opValue === "") return;
-    if (opValue.includes(".")) {
-      splitedOpValue = opValue.split(".");
-      const tableId = await handleTableName(splitedOpValue[0], sqlOp);
-      await handleColumnName(splitedOpValue[1], tableId, sqlOp);
-    } else {
-      await handleTableName(opValue, sqlOp);
+    for (let opValue of opValues) {
+      if (opValue.includes(".")) {
+        splitedOpValue = opValue.split(".");
+        const tableId = await handleTableName(
+          splitedOpValue[0],
+          sqlOp.toLowerCase()
+        );
+        await handleColumnName(splitedOpValue[1], tableId, sqlOp.toLowerCase());
+      } else {
+        await handleTableName(opValue, sqlOp.toLowerCase());
+      }
     }
   }
 };
@@ -53,10 +57,12 @@ const handleTableName = async (tableName, sqlOp) => {
 };
 
 const handleColumnName = async (columnName, tableId, sqlOp) => {
+  console.log(columnName);
   const { rows: columnNameRows } = await columnNamesDB.getColumnByNameAndId(
     columnName,
     tableId
   );
+  console.log(columnNameRows);
   if (sqlOp !== "from" && sqlOp !== "join") {
     const { rows: opsRows } = await commonOpsDB.getCommonOpsById(
       columnNameRows[0].id
