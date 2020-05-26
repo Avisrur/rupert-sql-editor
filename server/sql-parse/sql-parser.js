@@ -11,7 +11,6 @@ const parseSqlStringToObject = (queryString) => {
     where: getOperationValue(splitedQuery, "where", "group"),
     groupBy: getOperationValue(splitedQuery, "by"),
   };
-  console.log(queryObject);
   return queryObject;
 };
 
