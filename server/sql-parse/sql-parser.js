@@ -17,12 +17,14 @@ const parseSqlStringToObject = (queryString) => {
 const parseSqlObjectToString = (queryObject) => {
   let queryString = "";
   for (let [key, value] of Object.entries(queryObject)) {
-    if (value !== "") {
-      if (key != "select") queryString += "\n";
-      queryString += key + " " + value;
-    }
+    queryString += concatQueryStringBy(key, value);
   }
   return queryString;
+};
+
+const concatQueryStringBy = (key, value) => {
+  if (value === "") return "";
+  return key !== "select" ? "\n" + key + " " + value : key + " " + value;
 };
 
 module.exports = {
