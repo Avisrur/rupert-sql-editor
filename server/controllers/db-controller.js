@@ -13,23 +13,24 @@ module.exports = router;
 async function createTable(req, res, next) {
   const { rows } = await talbeNamesDB.getTableIdByName(req.body.tableName);
   if (rows.length === 0) {
-    const newTableId = uuidv4();
-    await talbeNamesDB.createNewTableNameWithoutCommonOp(
-      newTableId,
-      req.body.tableName
-    );
-    await commonOpsDB.createCommonOpsByIdWithoutCommonOp(newTableId);
-    for (let columnName of req.body.columns) {
-      const newColumnId = uuidv4();
-      await columnNamesDB.createNewColumnNameWithoutCommonOp(
-        newColumnId,
-        columnName,
-        newTableId
-      );
-      await commonOpsDB.createCommonOpsByIdWithoutCommonOp(newColumnId);
-    }
+    await createNewTable(req.body.tableName, req.body.columns);
     res.status(201).send("Table created");
   } else {
     res.status(400).send("Table name already exists");
   }
 }
+
+const createNewTable = async (tableName, columns) => {
+  const newTableId = uuidv4();
+  await talbeNamesDB.createNewTableName(newTableId, tableName);
+  await commonOpsDB.createCommonOpsById(newTableId);
+  await createColumns(columns);
+};
+
+const createColumns = async (columns) => {
+  for (let columnName of columns) {
+    const newColumnId = uuidv4();
+    await columnNamesDB.createNewColumnName(newColumnId, columnName, newTableId);
+    await commonOpsDB.createCommonOpsById(newColumnId);
+  }
+};

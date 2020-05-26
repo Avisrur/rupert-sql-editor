@@ -2,11 +2,6 @@ const pool = require("./db-pool");
 const tableName = "common_ops_test11";
 
 module.exports = {
-  createCommonOpsById: (id, operation_name) =>
-    pool.query("INSERT INTO " + tableName + " (id,$1) VALUES ($2,1)", [
-      operation_name,
-      id,
-    ]),
   createCommonOpsByIdWithoutCommonOp: (id) =>
     pool.query("INSERT INTO " + tableName + " (id) VALUES ($1)", [id]),
   getCommonOpsById: (id) =>

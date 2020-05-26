@@ -2,14 +2,7 @@ const pool = require("./db-pool");
 const tableName = "column_names_test11";
 
 module.exports = {
-  createNewColumnName: (column_id, column_name, table_id, sqlOp) =>
-    pool.query(
-      "INSERT INTO " +
-        tableName +
-        " (id,name,table_id,common_op,used) VALUES ($1,$2,$3,$4,0)",
-      [column_id, column_name, table_id, sqlOp]
-    ),
-  createNewColumnNameWithoutCommonOp: (column_id, column_name, table_id) =>
+  createNewColumnName: (column_id, column_name, table_id) =>
     pool.query(
       "INSERT INTO " +
         tableName +
