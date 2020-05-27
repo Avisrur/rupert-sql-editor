@@ -1,6 +1,7 @@
 const tableName = "column_names_test11";
 
 module.exports = {
+  tableName,
   createNewColumnName: (db, id, name, table_id) => db(tableName).insert({ id, name, table_id, used: 0 }),
   updateUsedById: (db, id, used) => db(tableName).where("id", "=", id).update({ used }),
   updateCommonOpById: (db, id, common_op, used) => db(tableName).where("id", "=", id).update({ used, common_op }),

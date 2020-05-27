@@ -1,12 +1,13 @@
 const commonOpsService = require("../../../services/common-ops-service");
+const sharedService = require("../../../services/shared-service");
 
-const updateCommonOps = async (db, entityService, id, used, oldCommonOp, sqlOp) => {
+const updateCommonOps = async (db, tableName, id, used, oldCommonOp, sqlOp) => {
   const opsRow = await commonOpsService.getCommonOpsById(db, id);
   incrementCurrentSqlOp(opsRow, sqlOp);
   let newCommonOp = calculateMostCommonOp(opsRow);
   await commonOpsService.updateCommonOpsById(db, id, sqlOpColumName(sqlOp), opsRow[sqlOp + "_op"]);
   if (newMostCommonOp(newCommonOp, oldCommonOp)) {
-    await entityService.updateCommonOpById(db, id, getCommonOp(newCommonOp), used + 1);
+    await sharedService.updateCommonOpById(db, tableName, id, getCommonOp(newCommonOp), used + 1);
   }
 };
 
