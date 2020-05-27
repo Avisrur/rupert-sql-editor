@@ -1,33 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const talbeNamesDB = require("../db/table-names");
-const columnNamesDB = require("../db/column-names");
+const talbeNamesService = require("../services/table-names-service");
+const columnNamesService = require("../services/column-names-service");
+const { getDB } = require("../utils/getter");
 
-router.post("/tableNames", tableNames);
 router.post("/tableNamesStartsWith", tableNamesStartsWith);
 router.post("/columnNames", columnNames);
 
 module.exports = router;
 
-async function tableNames(req, res, next) {
-  const { rows } = await talbeNamesDB.getAllTableNames();
-  res.json(rows);
-}
-
 async function tableNamesStartsWith(req, res, next) {
-  const { rows } = await talbeNamesDB.getAllTableNamesThatStartsWith(
-    req.body.startsWith + "%"
-  );
+  const rows = await talbeNamesService.getAllTableNamesThatStartsWith(getDB(req), req.body.startsWith + "%");
   res.json(rows);
 }
 
 async function columnNames(req, res, next) {
-  const { rows } = await talbeNamesDB.getTableIdByName(req.body.table_name);
-  if (rows.length !== 0) {
-    const {
-      rows: column_rows,
-    } = await columnNamesDB.getAllColumnNamesByTableId(rows[0].id);
-    res.json(column_rows);
+  const tableNameRow = await talbeNamesService.getTableByName(getDB(req), req.body.table_name);
+  if (tableNameRow != undefined) {
+    const columnRows = await columnNamesService.getAllColumnNamesByTableId(getDB(req), tableNameRow.id);
+    res.json(columnRows);
+  } else {
+    res.json([]);
   }
-  res.json([]);
 }

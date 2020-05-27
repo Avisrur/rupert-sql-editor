@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
+const db = require("./config/knex-config");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -14,6 +15,8 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
+
+app.set("db", db);
 
 app.use("/query", require("./controllers/query-controller"));
 app.use("/db", require("./controllers/db-controller"));
