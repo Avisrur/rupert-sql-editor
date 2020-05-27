@@ -1,25 +1,25 @@
 const { parseSqlStringToObject } = require("../../sql-parse/sql-parser");
-const { handleTableName } = require("./tables-handler");
-const { handleColumnName } = require("./columns-handler");
+const { handleTableName } = require("./entities/tables-handler");
+const { handleColumnName } = require("./entities/columns-handler");
 
-const handleNewQuery = async (query) => {
+const handleNewQuery = async (db, query) => {
   const queryObject = parseSqlStringToObject(query);
   for (let [sqlOp, opValues] of Object.entries(queryObject)) {
-    await handleOperationValues(sqlOp.toLowerCase(), opValues);
+    await handleOperationValues(db, sqlOp.toLowerCase(), opValues);
   }
 };
 
-const handleOperationValues = async (sqlOp, opValues) => {
+const handleOperationValues = async (db, sqlOp, opValues) => {
   for (let opValue of opValues) {
-    handleOneOperation(sqlOp, opValue);
+    handleOneOperation(db, sqlOp, opValue);
   }
 };
 
-const handleOneOperation = async (sqlOp, opValue) => {
+const handleOneOperation = async (db, sqlOp, opValue) => {
   const { tableName, columnName } = splitToTableAndColumnNames(opValue);
-  const tableId = await handleTableName(tableName, sqlOp);
+  const tableId = await handleTableName(db, tableName, sqlOp);
   if (columnNameExists(columnName)) {
-    await handleColumnName(columnName, tableId, sqlOp);
+    await handleColumnName(db, columnName, tableId, sqlOp);
   }
 };
 
